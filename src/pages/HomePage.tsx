@@ -1,8 +1,13 @@
+import { Link } from 'react-router-dom';
+
 function HomePage() {
   return (
     <>
-      <nav className='bg-[#213555] p-4 text-[#F0F0F0]'>
+      <nav className='flex justify-between bg-[#213555] p-4 text-[#F0F0F0]'>
         <h1>Diacus App</h1>
+        <Link to='/login' className='text-[#E5D283]'>
+          Login
+        </Link>
       </nav>
       <ul className='m-4 flex flex-col gap-2'>
         <li>
