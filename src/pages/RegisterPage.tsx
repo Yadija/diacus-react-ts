@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
 
+import useInput from '../hooks/useInput';
+
 function RegisterPage() {
+  const [username, onUsernameChange] = useInput('');
+  const [fullname, onFullnameChange] = useInput('');
+  const [password, onPasswordChange] = useInput('');
+
+  console.log(username, fullname, password);
+
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <form
@@ -12,21 +20,21 @@ function RegisterPage() {
           className='px-2 py-1'
           type='text'
           placeholder='username'
-          onChange={(event) => console.log(event)}
+          onChange={onUsernameChange}
           required
         />
         <input
           className='px-2 py-1'
           type='text'
           placeholder='fullname'
-          onChange={(event) => console.log(event)}
+          onChange={onFullnameChange}
           required
         />
         <input
           className='px-2 py-1'
           type='password'
           placeholder='password'
-          onChange={(event) => console.log(event)}
+          onChange={onPasswordChange}
           required
         />
         <button type='submit' className='mt-8 bg-[#E5D283] p-2 font-bold'>

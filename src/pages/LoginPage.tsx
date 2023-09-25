@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
 
+import useInput from '../hooks/useInput';
+
 function LoginPage() {
+  const [username, onUsernameChange] = useInput('');
+  const [password, onPasswordChange] = useInput('');
+
+  console.log(username, password);
+
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <form
@@ -12,14 +19,14 @@ function LoginPage() {
           className='px-2 py-1'
           type='text'
           placeholder='username'
-          onChange={(event) => console.log(event)}
+          onChange={onUsernameChange}
           required
         />
         <input
           className='px-2 py-1'
           type='password'
           placeholder='password'
-          onChange={(event) => console.log(event)}
+          onChange={onPasswordChange}
           required
         />
         <button type='submit' className='mt-8 bg-[#E5D283] p-2 font-bold'>
