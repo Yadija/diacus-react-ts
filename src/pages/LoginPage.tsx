@@ -1,20 +1,51 @@
-import { Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import { FormEvent, useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
+import axios from '../api/axios';
+import { AuthContext } from '../context/AuthProvider';
 import useInput from '../hooks/useInput';
 
 function LoginPage() {
+  const { setAuth } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [username, onUsernameChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  console.log(username, password);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const {
+        data: { data },
+      } = await axios.post('/auth', JSON.stringify({ username, password }), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      setAuth(data);
+      navigate('/');
+    } catch (err) {
+      const error = err as AxiosError;
+
+      if (error?.response?.status === 401) {
+        setErrorMessage('Invalid username or password');
+      } else {
+        console.log('Login Failed');
+      }
+    }
+  };
 
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <form
         className='flex w-[400px] flex-col gap-4 bg-[#213555] p-4'
-        onSubmit={(event) => console.log(event)}
+        onSubmit={handleSubmit}
       >
         <h1 className='text-center text-2xl font-bold text-[#F0F0F0]'>Login</h1>
+        {errorMessage && (
+          <p className='translate-y-3 text-sm text-red-500 shadow-md'>*{errorMessage}</p>
+        )}
         <input
           className='px-2 py-1'
           type='text'
