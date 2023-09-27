@@ -1,21 +1,50 @@
-import { Link } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import { FormEvent, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
+import axios from '../api/axios';
 import useInput from '../hooks/useInput';
 
 function RegisterPage() {
+  const navigate = useNavigate();
+
   const [username, onUsernameChange] = useInput('');
   const [fullname, onFullnameChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  console.log(username, fullname, password);
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      await axios.post('/users', JSON.stringify({ username, fullname, password }), {
+        headers: { 'Content-Type': 'application/json' },
+      });
+      navigate('/login');
+    } catch (err) {
+      const error = err as AxiosError;
+      console.log(error.response);
+
+      if (error?.response?.status === 400) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const data: any = error?.response?.data;
+        setErrorMessage(data?.message[0]);
+      } else {
+        console.log('Register Failed');
+      }
+    }
+  };
 
   return (
     <div className='flex min-h-screen items-center justify-center'>
       <form
         className='flex w-[400px] flex-col gap-4 bg-[#213555] p-4'
-        onSubmit={(event) => console.log(event)}
+        onSubmit={handleSubmit}
       >
         <h1 className='text-center text-2xl font-bold text-[#F0F0F0]'>Register</h1>
+        {errorMessage && (
+          <p className='translate-y-3 text-sm text-red-500 shadow-md'>*{errorMessage}</p>
+        )}
         <input
           className='px-2 py-1'
           type='text'
