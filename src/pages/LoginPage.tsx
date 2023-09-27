@@ -1,13 +1,13 @@
 import { AxiosError } from 'axios';
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import axios from '../api/axios';
-import { AuthContext } from '../context/AuthProvider';
+import useAuth from '../hooks/useAuth';
 import useInput from '../hooks/useInput';
 
 function LoginPage() {
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
 
   const [username, onUsernameChange] = useInput('');

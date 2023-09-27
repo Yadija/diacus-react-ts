@@ -1,13 +1,12 @@
-import { useContext } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { AuthContext } from './context/AuthProvider';
+import useAuth from './hooks/useAuth';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
 function App() {
-  const { auth } = useContext(AuthContext);
+  const { auth } = useAuth();
 
   return (
     <main className='relative m-auto min-h-screen max-w-xl bg-[#F0F0F0]'>
