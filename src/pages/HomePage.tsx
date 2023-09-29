@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import axios from '../api/axios';
+import axios, { axiosPrivate } from '../api/axios';
+import useAuth from '../hooks/useAuth';
 
 interface Thread {
   id: string;
@@ -11,6 +12,16 @@ interface Thread {
 
 function HomePage() {
   const [threads, setThreads] = useState([]);
+  const { auth, setAuth } = useAuth();
+
+  const onLogout = async () => {
+    try {
+      await axiosPrivate.delete('/auth');
+      setAuth(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const getThreads = async () => {
@@ -31,9 +42,15 @@ function HomePage() {
     <>
       <nav className='flex justify-between bg-[#213555] p-4 text-[#F0F0F0]'>
         <h1>Diacus App</h1>
-        <Link to='/login' className='text-[#E5D283]'>
-          Login
-        </Link>
+        {auth ? (
+          <button onClick={onLogout} className='text-[#E5D283]'>
+            Logout
+          </button>
+        ) : (
+          <Link to='/login' className='text-[#E5D283]'>
+            Login
+          </Link>
+        )}
       </nav>
       <ul className='m-4 flex flex-col gap-2'>
         {threads.map((thread: Thread) => (
