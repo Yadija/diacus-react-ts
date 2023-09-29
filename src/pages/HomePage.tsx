@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import axios, { axiosPrivate } from '../api/axios';
+import ThreadInput from '../components/ThreadInput';
 import useAuth from '../hooks/useAuth';
 
 interface Thread {
@@ -52,6 +53,7 @@ function HomePage() {
           </Link>
         )}
       </nav>
+      {auth && <ThreadInput />}
       <ul className='m-4 flex flex-col gap-2'>
         {threads.map((thread: Thread) => (
           <li key={thread.id}>
