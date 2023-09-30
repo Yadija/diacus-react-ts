@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import axios, { axiosPrivate } from '../api/axios';
+import axios from '../api/axios';
 import ThreadInput from '../components/ThreadInput';
 import useAuth from '../hooks/useAuth';
+import useLogout from '../hooks/useLogout';
 
 interface Thread {
   id: string;
@@ -13,15 +14,11 @@ interface Thread {
 
 function HomePage() {
   const [threads, setThreads] = useState([]);
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
+  const logout = useLogout();
 
   const onLogout = async () => {
-    try {
-      await axiosPrivate.delete('/auth');
-      setAuth(null);
-    } catch (error) {
-      console.error(error);
-    }
+    await logout();
   };
 
   useEffect(() => {
