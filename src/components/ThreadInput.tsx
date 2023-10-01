@@ -1,31 +1,28 @@
 import { FormEvent } from 'react';
 
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import useInput from '../hooks/useInput';
 
-const ThreadInput = () => {
-  const [content, onContentChange] = useInput('');
-  const axiosPrivate = useAxiosPrivate();
+const ThreadInput = ({
+  onCreateThread,
+}: {
+  onCreateThread: (content: string) => Promise<void>;
+}) => {
+  const [content, onContentChange, setContent] = useInput('');
 
-  const onCreateThread = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    try {
-      const {
-        data: { data },
-      } = await axiosPrivate.post('/threads', JSON.stringify({ content }));
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
+    await onCreateThread(content);
+    setContent('');
   };
 
   return (
-    <form className='mx-2 my-4 flex w-full justify-center' onSubmit={onCreateThread}>
+    <form className='mx-2 my-4 flex w-full justify-center' onSubmit={handleSubmit}>
       <input
         type='text'
         placeholder='Write your message ...'
         onChange={onContentChange}
+        value={content}
         className='mx-2 w-96 rounded-xl px-3 py-1 shadow-sm'
       />
       <button

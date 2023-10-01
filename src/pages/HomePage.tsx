@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axios from '../api/axios';
 import ThreadInput from '../components/ThreadInput';
 import useAuth from '../hooks/useAuth';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import useLogout from '../hooks/useLogout';
 
 interface Thread {
@@ -15,24 +16,34 @@ interface Thread {
 function HomePage() {
   const [threads, setThreads] = useState([]);
   const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
   const logout = useLogout();
 
   const onLogout = async () => {
     await logout();
   };
 
-  useEffect(() => {
-    const getThreads = async () => {
-      try {
-        const {
-          data: { data },
-        } = await axios.get('/threads');
-        setThreads(data.threads);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const onCreateThread = async (content: string) => {
+    try {
+      await axiosPrivate.post('/threads', JSON.stringify({ content }));
+      await getThreads();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  const getThreads = async () => {
+    try {
+      const {
+        data: { data },
+      } = await axios.get('/threads');
+      setThreads(data.threads);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
     getThreads();
   }, []);
 
@@ -50,7 +61,7 @@ function HomePage() {
           </Link>
         )}
       </nav>
-      {auth && <ThreadInput />}
+      {auth && <ThreadInput onCreateThread={onCreateThread} />}
       <ul className='m-4 flex flex-col gap-2'>
         {threads.map((thread: Thread) => (
           <li key={thread.id}>
