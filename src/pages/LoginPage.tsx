@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 import useInput from '../hooks/useInput';
 
 function LoginPage() {
-  const { setAuth } = useAuth();
+  const { setLogin } = useAuth();
   const navigate = useNavigate();
 
   const [username, onUsernameChange] = useInput('');
@@ -23,7 +23,7 @@ function LoginPage() {
       } = await axios.post('/auth', JSON.stringify({ username, password }), {
         headers: { 'Content-Type': 'application/json' },
       });
-      setAuth(data);
+      setLogin(data);
       navigate('/');
     } catch (err) {
       const error = err as AxiosError;

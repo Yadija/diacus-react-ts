@@ -2,7 +2,7 @@ import axios from '../api/axios';
 import useAuth from './useAuth';
 
 const useRefreshToken = () => {
-  const { auth, setAuth } = useAuth();
+  const { auth, setLogin } = useAuth();
 
   const refresh = async () => {
     const {
@@ -18,10 +18,7 @@ const useRefreshToken = () => {
       },
     );
 
-    setAuth((prev) => {
-      return { ...prev, ...data };
-    });
-
+    setLogin(data);
     return data;
   };
 

@@ -8,7 +8,7 @@ import useRefreshToken from './useRefreshToken';
 const useAxiosPrivate = () => {
   const navigate = useNavigate();
   const refresh = useRefreshToken();
-  const { auth, setAuth } = useAuth();
+  const { auth, setLogout } = useAuth();
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -34,7 +34,7 @@ const useAxiosPrivate = () => {
             prevRequest.headers['Authorization'] = `Bearer ${accessToken}`;
             return axiosPrivate(prevRequest);
           } catch (error) {
-            setAuth(null);
+            setLogout();
             navigate('/login');
           }
         }

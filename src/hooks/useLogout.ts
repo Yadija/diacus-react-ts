@@ -2,13 +2,13 @@ import useAuth from './useAuth';
 import useAxiosPrivate from './useAxiosPrivate';
 
 const useLogout = () => {
-  const { setAuth } = useAuth();
+  const { setLogout } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
   const logout = async () => {
     try {
       await axiosPrivate.delete('/auth');
-      setAuth(null);
+      setLogout();
     } catch (error) {
       console.error(error);
     }
